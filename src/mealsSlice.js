@@ -7,28 +7,28 @@ export const mealsSlice = createSlice({
     {
       name: "Breakfast",
       cost: 50,
-      quantity: 0,
+      selected: false,
     },
     {
       name: "Lunch",
       cost: 60,
-      quantity: 0,
+      selected: false,
     },
     {
       name: "High tea",
       cost: 25,
-      quantity: 0,
+      selected: false,
     },
     {
       name: "Dinner",
       cost: 70,
-      quantity: 0,
+      selected: false,
     },
-   
   ],
 
   reducers: {
     toggleMealSelection: (state, action) => {
+      state[action.payload].selected = !state[action.payload].selected;
     },
   },
 });
