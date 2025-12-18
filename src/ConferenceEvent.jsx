@@ -58,14 +58,27 @@ const ConferenceEvent = () => {
   };
   const calculateTotalCost = (section) => {
     let totalCost = 0;
+    let targetObject = null;
+
     if (section === "venue") {
-      venueItems.forEach((item) => {
-        totalCost += item.cost * item.quantity;
-      });
+      targetObject = venueItems;
+    } else if (section === "av") {
+      targetObject = avItems;
+    } else if (section == "meals") {
+      targetObject = mealsItems;
+    } else {
+      return 0;
     }
+    
+    targetObject.forEach((item) => {
+      totalCost += item.cost * item.quantity;
+    });
+
     return totalCost;
   };
   const venueTotalCost = calculateTotalCost("venue");
+  const avTotalCost = calculateTotalCost("av");
+  const mealsTotalCost = calculateTotalCost("meals");
 
   const navigateToProducts = (idType) => {
     if (idType == '#venue' || idType == '#addons' || idType == '#meals') {
@@ -97,7 +110,6 @@ const ConferenceEvent = () => {
             <div className="items-information">
               <div id="venue" className="venue_container container_main">
                 <div className="text">
-
                   <h1>Venue Room Selection</h1>
                 </div>
                 <div className="venue_selection">
@@ -110,43 +122,28 @@ const ConferenceEvent = () => {
                       <div>${item.cost}</div>
                       <div className="button_container">
                         {venueItems[index].name === "Auditorium Hall (Capacity:200)" ? (
-
                           <>
-                            <button
-                              className={venueItems[index].quantity === 0 ? "btn-warning btn-disabled" : "btn-minus btn-warning"}
-                              onClick={() => handleRemoveFromCart(index)}
-                            >
+                            <button className={venueItems[index].quantity === 0 ? "btn-warning btn-disabled" : "btn-minus btn-warning"}onClick={() => handleRemoveFromCart(index)}>
                               &#8211;
                             </button>
                             <span className="selected_count">
                               {venueItems[index].quantity > 0 ? ` ${venueItems[index].quantity}` : "0"}
                             </span>
-                            <button
-                              className={remainingAuditoriumQuantity === 0 ? "btn-success btn-disabled" : "btn-success btn-plus"}
-                              onClick={() => handleAddToCart(index)}
-                            >
+                            <button className={remainingAuditoriumQuantity === 0 ? "btn-success btn-disabled" : "btn-success btn-plus"} onClick={() => handleAddToCart(index)}>
                               &#43;
                             </button>
                           </>
                         ) : (
                           <div className="button_container">
-                            <button
-                              className={venueItems[index].quantity === 0 ? " btn-warning btn-disabled" : "btn-warning btn-plus"}
-                              onClick={() => handleRemoveFromCart(index)}
-                            >
+                            <button className={venueItems[index].quantity === 0 ? " btn-warning btn-disabled" : "btn-warning btn-plus"} onClick={() => handleRemoveFromCart(index)}>
                               &#8211;
                             </button>
                             <span className="selected_count">
                               {venueItems[index].quantity > 0 ? ` ${venueItems[index].quantity}` : "0"}
                             </span>
-                            <button
-                              className={venueItems[index].quantity === 10 ? " btn-success btn-disabled" : "btn-success btn-plus"}
-                              onClick={() => handleAddToCart(index)}
-                            >
+                            <button className={venueItems[index].quantity === 10 ? " btn-success btn-disabled" : "btn-success btn-plus"} onClick={() => handleAddToCart(index)}>
                               &#43;
                             </button>
-
-
                           </div>
                         )}
                       </div>
@@ -155,20 +152,34 @@ const ConferenceEvent = () => {
                 </div>
                 <div className="total_cost">Total Cost: ${venueTotalCost}</div>
               </div>
-
               {/*Necessary Add-ons*/}
               <div id="addons" className="venue_container container_main">
-
-
                 <div className="text">
-
                   <h1> Add-ons Selection</h1>
-
                 </div>
                 <div className="addons_selection">
-
+                  {avItems.map((item, index) => (
+                    <div className="av_data venue_main" key={index}>
+                      <div className="img">
+                        <img src={item.img} alt={item.name} />
+                      </div>
+                      <div className="text"> {item.name} </div>
+                      <div> ${item.cost} </div>
+                      <div className="addons_btn">
+                        <button className="btn-warning" onClick={() => handleDecrementAvQuantity(index)}>
+                          &ndash;
+                        </button>
+                        <span className="quantity-value">
+                          {item.quantity}
+                        </span>
+                        <button className=" btn-success" onClick={() => handleIncrementAvQuantity(index)}>
+                          &#43;
+                        </button>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                <div className="total_cost">Total Cost:</div>
+                <div className="total_cost">Total Cost: ${avTotalCost}</div>
 
               </div>
 
@@ -187,7 +198,7 @@ const ConferenceEvent = () => {
                 <div className="meal_selection">
 
                 </div>
-                <div className="total_cost">Total Cost: </div>
+                <div className="total_cost">Total Cost: ${mealsTotalCost}</div>
 
 
               </div>
